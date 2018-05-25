@@ -1,0 +1,45 @@
+#blogs-header {
+    margin: 1em 0 0.5em;
+    font-size: 3em;
+    font-family: Raleway, sans-serif;
+}
+
+#blogs-block {
+    max-width: 700px;
+    padding: 0 0 15px 15px;
+    margin: 0 auto;
+    background-color: transparent;
+}
+
+.blog-block {
+    padding: 2em 4em;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    box-shadow: 2px 2px 4px grey;
+    background-color: white;
+    margin-bottom: 2em;
+}
+
+.sender-at {
+    margin-left: 0.6em;
+    font-size: 1.2em;
+}
+.sender-name {
+    font-family: RobotoSlab, sans-serif;
+    font-size: 1.6em;
+}
+
+.sender-id {
+    font-family: Dosis, sans-serif;
+}
+
+.sent-time {
+    font-family: Raleway, sans-serif;
+    font-size: 0.9em;
+}
+
+.blog-content {
+    margin-top: 0.8em;
+    font-family: Raleway, sans-serif;
+    font-size: 1.2em;
+}

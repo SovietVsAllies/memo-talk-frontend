@@ -1,9 +1,14 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {Nav, Navbar, NavItem} from 'react-bootstrap'
 import './Header.css'
 
 class Header extends Component {
     render() {
+        const items = this.isLoginedIn() ? (
+            <AfterLoginItems/>
+        ) : (
+            <BeforeLoginItems/>
+        );
         return (
             <Navbar collapseOnSelect id='nav-bar'>
                 <Navbar.Header>
@@ -13,18 +18,39 @@ class Header extends Component {
                     <Navbar.Toggle/>
                 </Navbar.Header>
                 <Navbar.Collapse>
-                    <Nav pullRight>
-                        <NavItem eventKey={1} href="#">
-                            Link Right
-                        </NavItem>
-                        <NavItem eventKey={2} href="#">
-                            Link Right
-                        </NavItem>
-                    </Nav>
+                    <Nav pullRight>{items}</Nav>
                 </Navbar.Collapse>
             </Navbar>
-    )
-        ;
+        );
+    }
+
+    isLoginedIn() {
+        return this.props.id === '';
+    }
+}
+
+class BeforeLoginItems extends Component {
+    render() {
+        return (
+            <NavItem eventKey={1} href="#">
+                Register
+            </NavItem>
+        );
+    }
+}
+
+class AfterLoginItems extends Component {
+    render() {
+        return (
+            <Fragment>
+                <NavItem eventKey={1} href="#">
+                    Register
+                </NavItem>
+                <NavItem eventKey={2} href="#">
+                    dfdf
+                </NavItem>
+            </Fragment>
+        );
     }
 }
 
