@@ -1,0 +1,53 @@
+#nav-bar {
+    background-color: #5682a3;
+    background-image: none;
+    border: none;
+    border-radius: 0;
+}
+
+.navbar-default a {
+    transition-duration: 0.4s;
+}
+
+.navbar-right a {
+    font-family: Dosis, sans-serif;
+}
+
+.navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
+    color: white;
+}
+
+.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {
+    color: white;
+}
+
+.navbar-default .navbar-brand {
+    color: #eaeaea;
+}
+
+.navbar-brand {
+    font-size: 1.6em;
+    font-family: RobotoSlab, sans-serif;
+    color: white !important;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #eaeaea;
+    transition-duration: 0.2s;
+}
+
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: #5577a2;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: white;
+}
+
+.navbar-collapse {
+    border-top: none;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #eaeaea;
+}

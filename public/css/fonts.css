@@ -1,0 +1,15 @@
+/* Load Fonts */
+@font-face {
+    font-family: "RobotoSlab";
+    src: url('../fonts/RobotoSlab.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: "Dosis";
+    src: url('../fonts/Dosis.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: "Raleway";
+    src: url('../fonts/Raleway.ttf') format("truetype");
+}
