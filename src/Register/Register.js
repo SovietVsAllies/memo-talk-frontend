@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {FormGroup, FormControl, ControlLabel} from 'react-bootstrap';
 import './Register.css'
-import ParticleBackground from "../ParticleBackground/ParticleBackground";
 
 class Register extends Component {
     render() {
         return (
             <div className="register-block">
-                <ParticleBackground/>
                 <h1 className="text-center">Welcome!</h1>
                 <p className="lead text-muted text-center">Please register to start your messaging:</p>
                 <RegisterForm/>

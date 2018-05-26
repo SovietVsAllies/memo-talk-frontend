@@ -4,6 +4,9 @@ import Header from './Header/Header'
 import './index.css';
 import Footer from './Footer/Footer';
 import MicroBlogs from "./MicroBlogs/MicroBlogs";
+import Chat from "./Chat/Chat";
+import ChatClient from "react-chat-client";
+import ParticleBackground from "./ParticleBackground/ParticleBackground";
 
 const blogListExample = [
     {
@@ -23,11 +26,16 @@ const blogListExample = [
 ];
 
 class MemoTalk extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     render() {
         return (
             <Fragment>
                 <Header/>
-                <MicroBlogs blogs={blogListExample}/>
+                <ParticleBackground/>
+                <MicroBlogs/>
                 <Footer/>
             </Fragment>
         );

@@ -1,0 +1,10 @@
+.loading-animation {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -90px;
+    margin-top: -40px;
+    /*margin-left: -50%;*/
+    /*margin-top: -50%;*/
+    z-index: 10;
+}
