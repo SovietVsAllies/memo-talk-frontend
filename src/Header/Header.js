@@ -1,10 +1,11 @@
 import React, {Component, Fragment} from 'react';
 import {Nav, Navbar, NavItem} from 'react-bootstrap'
 import './Header.css'
+import Application from "../Application/Application";
 
 class Header extends Component {
     render() {
-        const items = this.isLoginedIn() ? (
+        const items = Header.isLoginedIn() ? (
             <AfterLoginItems/>
         ) : (
             <BeforeLoginItems/>
@@ -24,15 +25,15 @@ class Header extends Component {
         );
     }
 
-    isLoginedIn() {
-        return this.props.id === '';
+    static isLoginedIn() {
+        return typeof(localStorage.getItem('account')) !== 'undefined';
     }
 }
 
 class BeforeLoginItems extends Component {
     render() {
         return (
-            <NavItem eventKey={1} href="#">
+            <NavItem eventKey={1} href="/register/">
                 Register
             </NavItem>
         );
@@ -43,11 +44,11 @@ class AfterLoginItems extends Component {
     render() {
         return (
             <Fragment>
-                <NavItem eventKey={1} href="#">
-                    Register
+                <NavItem eventKey={1} href="/manage/">
+                    Manage
                 </NavItem>
                 <NavItem eventKey={2} href="#">
-                    dfdf
+                    {Application.getInstance().registry.getAccountName(localStorage.getItem('account'))}
                 </NavItem>
             </Fragment>
         );

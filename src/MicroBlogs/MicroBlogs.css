@@ -1,14 +1,7 @@
 #blogs-header {
     margin: 1em 0 0.5em;
-    font-size: 3em;
+    font-size: 2em;
     font-family: Raleway, sans-serif;
-}
-
-#blogs-block {
-    max-width: 700px;
-    padding: 0 0 15px 15px;
-    margin: 0 auto;
-    background-color: transparent;
 }
 
 .blog-block {
@@ -42,4 +35,25 @@
     margin-top: 0.8em;
     font-family: Raleway, sans-serif;
     font-size: 1.2em;
+}
+
+#send-blog-block {
+    margin: 1em 0 2em;
+}
+
+#send-blog-block label {
+    font-family: Raleway, sans-serif;
+    font-size: 1.2em;
+    color: grey;
+}
+
+#send-blog-block textarea {
+    min-height: 6em;
+    resize: vertical;
+}
+
+#send-blog-block button {
+    float: right;
+    margin-right: 1em;
+    transition-duration: 0.3s;
 }

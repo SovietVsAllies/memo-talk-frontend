@@ -1,0 +1,11 @@
+#manage-header {
+    font-family: Raleway, sans-serif;
+    font-size: 3em;
+}
+
+#manage-form {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+    font-family: RobotoSlab, sans-serif;
+}
