@@ -26,7 +26,7 @@ class Header extends Component {
     }
 
     static isLoginedIn() {
-        return typeof(localStorage.getItem('account')) !== 'undefined';
+        return typeof(localStorage.getItem('account')) === 'string' && localStorage.getItem('account');
     }
 }
 

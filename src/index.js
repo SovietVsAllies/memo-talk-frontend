@@ -15,7 +15,6 @@ class MemoTalk extends Component {
         return (
             <Fragment>
                 <Header/>
-                <ChatClient/>
                 <ParticleBackground/>
                 <Router>
                     <Fragment>
