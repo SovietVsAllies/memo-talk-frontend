@@ -44,6 +44,9 @@ class AfterLoginItems extends Component {
     render() {
         return (
             <Fragment>
+                <NavItem eventKey={3} href="/purse/">
+                    Purse
+                </NavItem>
                 <NavItem eventKey={1} href="/manage/">
                     Manage
                 </NavItem>

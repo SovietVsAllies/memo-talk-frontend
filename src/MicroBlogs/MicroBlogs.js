@@ -1,10 +1,10 @@
 import './MicroBlogs.css';
 import React, {Component, Fragment} from 'react';
 import Loading from "../Loading/Loading";
-import {FormGroup, Button, FormControl, ControlLabel} from 'react-bootstrap'
+import {FormGroup, Button, FormControl, ControlLabel, Tabs, Tab} from 'react-bootstrap'
 import Application from "../Application/Application";
 import CenterBlock from "../CenterBlock/CenterBlock";
-import {Redirect, Route} from 'react-router-dom';
+import {Messenger} from "../Manage/Manage";
 
 /***
  * blogs: A list of blog
@@ -70,26 +70,58 @@ class MicroBlogs extends Component {
             blogsContent = <Loading/>
         } else {
             blogsContent =
-                    <Fragment>
-                        {this.state.posts.map((blog) =>
-                            <SingleBlog
-                                key={blog.id + blog.account.address}
-                                name={blog.accountName}
-                                id={blog.id}
-                                time={blog.timestamp}
-                                content={blog.content}
-                            />
-                        )}
-                    </Fragment>
+                <Fragment>
+                    <div className='blog-block'>
+                        <div>
+                            <div className="sender-info"><span className="sender-name">David</span><span
+                                className="sender-id sender-at">@</span><span className="sender-id">4</span></div>
+                            <div className="sent-time">2018/5/28 下午1:33:34</div>
+                            <div className="blog-content">
+                                Three decades ago, Ireland was a very different place. Divorce was illegal, as was
+                                same-sex
+                                marriage. Abortion, already illegal in practice, was constitutionally banned in a 1983
+                                referendum -- known as the Eighth Amendment.
+
+                                On Saturday Ireland emphatically voted to repeal that constitutional amendment in a
+                                referendum, paving the way for legalized abortion.
+                                "If you look at 1983, when the anti-abortion clause was put into the constitution, to
+                                now,
+                                the change is just extraordinary," said Irish Times columnist Fintan O'Toole.
+                                <br/>
+                                <img src="/img/shot.PNG" width={400} height={250}/>
+                            </div>
+                        </div>
+                    </div>
+                    {this.state.posts.map((blog) =>
+                        <SingleBlog
+                            key={blog.id + blog.account.address}
+                            name={blog.accountName}
+                            id={blog.id}
+                            time={blog.timestamp}
+                            content={blog.content}
+                        />
+                    )}
+                    <Messenger/>
+                </Fragment>
             ;
         }
         return (
             <CenterBlock>
+                <div id='search-bar'>
+                    <FormControl type="text" placeholder="Search"/>
+                    <i className="fas fa-search"/>
+                </div>
                 <SendBlogBlock updatePosts={this.updatePosts}/>
                 <hr/>
                 <header className='text-center' id='blogs-header'>
-                    These are microblogs from your following peers:
+                    Microblogs square
                 </header>
+                <Tabs id="uncontrolled-tab-example">
+                    <Tab eventKey={1} title="Followed">
+                    </Tab>
+                    <Tab eventKey={2} title="All">
+                    </Tab>
+                </Tabs>
                 {blogsContent}
             </CenterBlock>
         );
@@ -132,7 +164,7 @@ class SendBlogBlock extends Component {
         let content = this.state.value;
         let count = account.getPostCount().toNumber();
         account.post(content, {gas: 4700000});
-        this.timerId = setInterval(function() {
+        this.timerId = setInterval(function () {
             if (account.getPostCount().toNumber() > count) {
                 clearInterval(this.timerId);
                 this.props.updatePosts();
@@ -142,21 +174,6 @@ class SendBlogBlock extends Component {
     }
 
     render() {
-        // const Refresh = ({ path = '/' }) => (
-        //     <Route
-        //         path={path}
-        //         component={({ history, location, match }) => {
-        //             history.replace({
-        //                 ...location,
-        //                 pathname:location.pathname.substring(match.path.length)
-        //             });
-        //             return null;
-        //         }}
-        //     />
-        // );
-        // if (this.state.posted) {
-        //     return <Refresh path='/'/>;
-        // }
         let button;
         if (this.state.value !== '') {
             button = <Button bsStyle='primary' type="submit">Submit</Button>;
@@ -171,6 +188,16 @@ class SendBlogBlock extends Component {
                                  onChange={this.handleChange}/>
                 </FormGroup>
                 {button}
+                <div id='send-block-tools'>
+                    <i className="far fa-smile"/>
+                    <span>Emoji</span>
+                    <i className="fas fa-camera-retro"/>
+                    <span>Photo</span>
+                    <i className="fas fa-video"/>
+                    <span>Video</span>
+                    <i className="fas fa-hashtag"/>
+                    <span>Topic</span>
+                </div>
                 <div style={{clear: 'both'}}/>
             </form>
         );

@@ -48,7 +48,11 @@ class Manage extends Component {
                 <ManageForm updateFollowing={this.updateFollowing}/>
                 <ListGroup>
                     {this.state.followings.map((name) =>
-                        <ListGroupItem onClick={(e) => this.handleClick(e, name)}>{name}</ListGroupItem>
+                        <ListGroupItem onClick={(e) => this.handleClick(e, name)}>{name}
+                            <Button bsStyle="primary" className='unfollow-button'>Chat</Button>
+                            <Button bsStyle="success" className='unfollow-button'>Chat with blockchain</Button>
+                            <Button bsStyle="danger" className='unfollow-button'>Unfollow</Button>
+                        </ListGroupItem>
                     )}
                 </ListGroup>
                 <Messenger other={this.state.other}/>
@@ -120,7 +124,7 @@ class ManageForm extends Component {
     }
 }
 
-class Messenger extends Component {
+export class Messenger extends Component {
     constructor(props) {
         super(props);
         this.state = {
