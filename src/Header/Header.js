@@ -47,8 +47,8 @@ class AfterLoginItems extends Component {
                 <NavItem eventKey={3} href="/purse/">
                     Purse
                 </NavItem>
-                <NavItem eventKey={1} href="/manage/">
-                    Manage
+                <NavItem eventKey={1} href="/chat/">
+                    Chat
                 </NavItem>
                 <NavItem eventKey={2} href="#">
                     {Application.getInstance().registry.getAccountName(localStorage.getItem('account'))}

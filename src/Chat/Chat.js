@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './Manage.css';
+import './Chat.css';
 import CenterBlock from "../CenterBlock/CenterBlock";
 import {FormGroup, Button, HelpBlock, FormControl, ControlLabel} from 'react-bootstrap';
 import {ListGroup, ListGroupItem} from 'react-bootstrap';
@@ -7,7 +7,7 @@ import {Launcher} from "react-chat-window";
 import Application from "../Application/Application";
 import $ from 'jquery';
 
-class Manage extends Component {
+class Chat extends Component {
     constructor(props) {
         super(props);
         let followings = JSON.parse(localStorage.getItem('following'));
@@ -43,9 +43,9 @@ class Manage extends Component {
     render() {
         return (
             <CenterBlock>
-                <header id='manage-header' className='text-center'>Manage your following peers</header>
-                <p className="lead text-muted text-center">Follow peers you like:</p>
-                <ManageForm updateFollowing={this.updateFollowing}/>
+                <header id='manage-header' className='text-center'>Chat with anybody you like</header>
+                <p className="lead text-muted text-center">Follow peers by entering his name:</p>
+                <FollowNewPeerForm updateFollowing={this.updateFollowing}/>
                 <ListGroup>
                     {this.state.followings.map((name) =>
                         <ListGroupItem onClick={(e) => this.handleClick(e, name)}>{name}
@@ -61,7 +61,7 @@ class Manage extends Component {
     }
 }
 
-class ManageForm extends Component {
+class FollowNewPeerForm extends Component {
     constructor(props) {
         super(props);
 
@@ -277,4 +277,4 @@ export class Messenger extends Component {
     }
 }
 
-export default Manage;
+export default Chat;

@@ -1,10 +1,11 @@
 import './MicroBlogs.css';
 import React, {Component, Fragment} from 'react';
 import Loading from "../Loading/Loading";
-import {FormGroup, Button, FormControl, ControlLabel, Tabs, Tab} from 'react-bootstrap'
+import {FormGroup, Button, FormControl, ControlLabel, OverlayTrigger, Popover} from 'react-bootstrap'
 import Application from "../Application/Application";
 import CenterBlock from "../CenterBlock/CenterBlock";
-import {Messenger} from "../Manage/Manage";
+import Picker from "emoji-mart/dist-es/components/picker/picker";
+import 'emoji-mart/css/emoji-mart.css'
 
 /***
  * blogs: A list of blog
@@ -101,7 +102,6 @@ class MicroBlogs extends Component {
                             content={blog.content}
                         />
                     )}
-                    <Messenger/>
                 </Fragment>
             ;
         }
@@ -114,14 +114,8 @@ class MicroBlogs extends Component {
                 <SendBlogBlock updatePosts={this.updatePosts}/>
                 <hr/>
                 <header className='text-center' id='blogs-header'>
-                    Microblogs square
+                    Microblogs Square
                 </header>
-                <Tabs id="uncontrolled-tab-example">
-                    <Tab eventKey={1} title="Followed">
-                    </Tab>
-                    <Tab eventKey={2} title="All">
-                    </Tab>
-                </Tabs>
                 {blogsContent}
             </CenterBlock>
         );
@@ -152,6 +146,13 @@ class SendBlogBlock extends Component {
         this.state = {value: ''};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.addEmoji = this.addEmoji.bind(this);
+        this.emojiPopover = (
+            <Popover title="Select emoji:" style={{maxWidth: 100000}}>
+                <Picker showPreview={false} recent={false} native={true} onSelect={this.addEmoji} perLine={8}/>
+            </Popover>
+        );
+        this.addHash = this.addHash.bind(this);
     }
 
     handleChange(event) {
@@ -173,6 +174,14 @@ class SendBlogBlock extends Component {
         }.bind(this), 100);
     }
 
+    addEmoji(emoji) {
+        this.setState({value: this.state.value + emoji.native});
+    }
+
+    addHash(emoji) {
+        this.setState({value: this.state.value + '#'});
+    }
+
     render() {
         let button;
         if (this.state.value !== '') {
@@ -181,25 +190,33 @@ class SendBlogBlock extends Component {
             button = <Button bsStyle='primary' type="submit" disabled>Submit</Button>;
         }
         return (
-            <form id='send-blog-block' onSubmit={this.handleSubmit}>
-                <FormGroup controlId="formControlsTextarea" classNam='blog-block'>
-                    <ControlLabel>Post a new micro-blog!</ControlLabel>
-                    <FormControl componentClass="textarea" placeholder="Write something..." value={this.state.value}
-                                 onChange={this.handleChange}/>
-                </FormGroup>
-                {button}
-                <div id='send-block-tools'>
-                    <i className="far fa-smile"/>
-                    <span>Emoji</span>
-                    <i className="fas fa-camera-retro"/>
-                    <span>Photo</span>
-                    <i className="fas fa-video"/>
-                    <span>Video</span>
-                    <i className="fas fa-hashtag"/>
-                    <span>Topic</span>
-                </div>
-                <div style={{clear: 'both'}}/>
-            </form>
+            <Fragment>
+                <form id='send-blog-block' onSubmit={this.handleSubmit}>
+                    <FormGroup controlId="formControlsTextarea" classNam='blog-block'>
+                        <ControlLabel>Post a new micro-blog!</ControlLabel>
+                        <FormControl componentClass="textarea" placeholder="Write something..." value={this.state.value}
+                                     onChange={this.handleChange}/>
+                    </FormGroup>
+                    {button}
+                    <div id='send-block-tools'>
+                        <OverlayTrigger trigger="click" placement="bottom" overlay={this.emojiPopover}>
+                            <span id="emoji-tool">
+                                <i className="far fa-smile"/>
+                                <span id="emoji-button"> Emoji</span>
+                            </span>
+                        </OverlayTrigger>
+                        <span>
+                            <i className="fas fa-camera-retro"/>
+                            <span> Photo</span>
+                        </span>
+                        <span onClick={this.addHash}>
+                            <i className="fas fa-hashtag"/>
+                            <span> Topic</span>
+                        </span>
+                    </div>
+                    <div style={{clear: 'both'}}/>
+                </form>
+            </Fragment>
         );
     }
 }

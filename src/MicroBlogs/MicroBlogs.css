@@ -86,3 +86,12 @@
     position: relative;
     right: 2em;
 }
+
+#send-block-tools > span :hover {
+    cursor: pointer;
+}
+
+#send-block-tools > span > span {
+    margin: 0;
+}
+
