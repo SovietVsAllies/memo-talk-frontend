@@ -2,9 +2,14 @@ import React from 'react';
 import './Manage.css'
 import CenterBlock from '../CenterBlock/CenterBlock'
 import {Table, Button} from 'react-bootstrap';
+import Application from "../Application/Application";
 
 export default class Purse extends React.Component {
     render() {
+        let web3 = Application.getInstance().web3;
+        console.log(web3.fromWei(web3.eth.getBalance(web3.eth.defaultAccount)).toString());
+        let balance = web3.fromWei(web3.eth.getBalance(web3.eth.defaultAccount)).toString() + ' Ether';
+        let id = web3.eth.defaultAccount;
         return (
             <CenterBlock>
                 <header id='manage-header' className='text-center'>Start your mining work.</header>
@@ -12,22 +17,14 @@ export default class Purse extends React.Component {
                 <Table className='text-center' striped bordered condensed hover id='purse-table'>
                     <thead>
                     <tr>
-                        <th className='text-center'>Working ID</th>
-                        <th className='text-center'>Working Time Amount</th>
-                        <th className='text-center'>Mined Currency</th>
-                        <th className='text-center'>Currency Amount</th>
-                        <th className='text-center'>Operation</th>
+                        <th className='text-center'>Account ID</th>
+                        <th className='text-center'>Balance</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>189ue239</td>
-                        <td>9 Hours</td>
-                        <td>373.1</td>
-                        <td>212</td>
-                        <td className='text-center'>
-                            <Button bsStyle="danger">Stop</Button>
-                        </td>
+                        <td>{id}</td>
+                        <td>{balance}</td>
                     </tr>
                     </tbody>
                 </Table>

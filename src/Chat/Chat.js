@@ -50,6 +50,7 @@ class Chat extends Component {
                 this.updateFollowing();
             }.bind(this);
         }
+        unfollow = unfollow.bind(this);
         return (
             <CenterBlock>
                 <header id='manage-header' className='text-center'>Chat with anybody you like</header>
