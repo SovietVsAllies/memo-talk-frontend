@@ -148,11 +148,16 @@ class SendBlogBlock extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.addEmoji = this.addEmoji.bind(this);
         this.emojiPopover = (
-            <Popover title="Select emoji:" style={{maxWidth: 100000}}>
+            <Popover title="Select emoji" style={{maxWidth: 100000}}>
                 <Picker showPreview={false} recent={false} native={true} onSelect={this.addEmoji} perLine={8}/>
             </Popover>
         );
         this.addHash = this.addHash.bind(this);
+        this.uploadPhotoPopover = (
+            <Popover title="Upload file" style={{maxWidth: 100000}}>
+                <input type="file" accept="image/png, image/jpeg"/>
+            </Popover>
+        );
     }
 
     handleChange(event) {
@@ -205,10 +210,12 @@ class SendBlogBlock extends Component {
                                 <span id="emoji-button"> Emoji</span>
                             </span>
                         </OverlayTrigger>
-                        <span>
-                            <i className="fas fa-camera-retro"/>
-                            <span> Photo</span>
-                        </span>
+                        <OverlayTrigger trigger="click" placement="bottom" overlay={this.uploadPhotoPopover}>
+                            <span id="photo-tool">
+                                <i className="fas fa-camera-retro"/>
+                                <span id="photo-button"> Photo</span>
+                            </span>
+                        </OverlayTrigger>
                         <span onClick={this.addHash}>
                             <i className="fas fa-hashtag"/>
                             <span> Topic</span>
