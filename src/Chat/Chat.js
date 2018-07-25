@@ -41,6 +41,15 @@ class Chat extends Component {
     }
 
     render() {
+        function unfollow(name) {
+            return function(e) {
+                e.preventDefault();
+                let followingNames = JSON.parse(localStorage.getItem('following'));
+                followingNames.splice(followingNames.indexOf(name), 1);
+                localStorage.setItem('following', JSON.stringify(followingNames));
+                this.updateFollowing();
+            }.bind(this);
+        }
         return (
             <CenterBlock>
                 <header id='manage-header' className='text-center'>Chat with anybody you like</header>
@@ -51,7 +60,7 @@ class Chat extends Component {
                         <ListGroupItem onClick={(e) => this.handleClick(e, name)}>{name}
                             <Button bsStyle="primary" className='unfollow-button'>Chat</Button>
                             <Button bsStyle="success" className='unfollow-button'>Chat with blockchain</Button>
-                            <Button bsStyle="danger" className='unfollow-button'>Unfollow</Button>
+                            <Button bsStyle="danger" className='unfollow-button' onClick={unfollow(name)}>Unfollow</Button>
                         </ListGroupItem>
                     )}
                 </ListGroup>
