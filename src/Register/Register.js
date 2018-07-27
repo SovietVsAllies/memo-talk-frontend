@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {FormGroup, Button, HelpBlock, FormControl, ControlLabel} from 'react-bootstrap';
 import './Register.css';
+import Loading from '../Loading/Loading.js'
 import $ from 'jquery';
 import Application from "../Application/Application";
 import CenterBlock from "../CenterBlock/CenterBlock";
@@ -25,7 +26,8 @@ class RegisterForm extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state = {
-            value: ''
+            value: '',
+            loading: false,
         };
     };
 
@@ -43,6 +45,7 @@ class RegisterForm extends Component {
 
     async handleSubmit(e) {
         e.preventDefault();
+        this.setState({loading: true});
         let web3 = Application.getInstance().web3;
         let registry = Application.getInstance().registry;
         let accountContract = Application.getInstance().accountContract;
@@ -92,6 +95,9 @@ class RegisterForm extends Component {
             // TODO
             window.location.href = '/';
             // return <Redirect to='/'/>;
+        }
+        if (this.state.loading) {
+            return <Loading/>
         }
         return (
             <form id='register-form' onSubmit={this.handleSubmit}>

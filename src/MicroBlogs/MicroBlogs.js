@@ -88,27 +88,6 @@ class MicroBlogs extends Component {
                     <header className='text-center' id='blogs-header'>
                         Microblogs Square
                     </header>
-                    <div className='blog-block'>
-                        <div>
-                            <div className="sender-info"><span className="sender-name">David</span><span
-                                className="sender-id sender-at">@</span><span className="sender-id">4</span></div>
-                            <div className="sent-time">2018/5/28 下午1:33:34</div>
-                            <div className="blog-content">
-                                Three decades ago, Ireland was a very different place. Divorce was illegal, as was
-                                same-sex
-                                marriage. Abortion, already illegal in practice, was constitutionally banned in a 1983
-                                referendum -- known as the Eighth Amendment.
-
-                                On Saturday Ireland emphatically voted to repeal that constitutional amendment in a
-                                referendum, paving the way for legalized abortion.
-                                "If you look at 1983, when the anti-abortion clause was put into the constitution, to
-                                now,
-                                the change is just extraordinary," said Irish Times columnist Fintan O'Toole.
-                                <br/>
-                                <img src="/img/shot.PNG" width={400} height={250}/>
-                            </div>
-                        </div>
-                    </div>
                     {this.state.posts.map((blog) => {
                         return <SingleBlog
                             key={blog.id + blog.account.address}
@@ -172,7 +151,7 @@ class SingleBlog extends Component {
 
     image() {
         if (typeof this.props.content.image !== 'undefined') {
-            return <img src={this.props.content.image} width={400} height={250}/>;
+            return <img src={this.props.content.image} style={{maxWidth: 400}}/>;
         } else {
             return null;
         }

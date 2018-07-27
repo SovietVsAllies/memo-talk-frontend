@@ -25,3 +25,7 @@ font-family: RobotoSlab, sans-serif;
     opacity: 0;
     transition: opacity 0.4s linear;
 }
+
+#upload-photo-chat:hover {
+    color: grey !important;
+}
