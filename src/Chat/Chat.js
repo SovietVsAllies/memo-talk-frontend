@@ -6,7 +6,7 @@ import {ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Launcher} from "react-chat-window";
 import Application from "../Application/Application";
 import $ from 'jquery';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { CSSTransitionGroup } from 'react-transition-group';
 
 class Chat extends Component {
     constructor(props) {
@@ -288,10 +288,10 @@ export class Messenger extends Component {
                     messageList={this.state.messageList}
                     showEmoji
                 />
-                <ReactCSSTransitionGroup>
+                <CSSTransitionGroup>
                     transitionEnterTimeout={400}
                     transitionLeaveTimeout={400}
-                </ReactCSSTransitionGroup>
+                </CSSTransitionGroup>
             </Fragment>
             );
         } else {
