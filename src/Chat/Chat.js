@@ -158,7 +158,15 @@ export class Messenger extends Component {
                 content = message.data.emoji;
                 break;
             case 'image':
-                content = message.data.image;
+                content = (await $.ajax({
+                    url: 'https://api.cloudinary.com/v1_1/dsbbmtvkx/image/upload',
+                    method: 'post',
+                    data: {
+                        file: message.data.image,
+                        upload_preset: 'ysny53ko',
+                    },
+                    dataType: 'json',
+                })).secure_url;
                 break;
         }
         let acc = accountContract.at(registry.getAccountAddress(recipient));
@@ -301,7 +309,7 @@ export class Messenger extends Component {
                     Messenger.saveMessage({
                         sender: message[0],
                         recipient: account.address,
-                        content: plaintext.plaintext,
+                        content: plaintextMessage.content,
                         type: plaintextMessage.type,
                     });
                 } catch (e) {
