@@ -5,8 +5,8 @@ import {FormGroup, Button, FormControl, ControlLabel, OverlayTrigger, Popover} f
 import Application from "../Application/Application";
 import CenterBlock from "../CenterBlock/CenterBlock";
 import Picker from "emoji-mart/dist-es/components/picker/picker";
-import 'emoji-mart/css/emoji-mart.css'
-import $ from 'jquery'
+import 'emoji-mart/css/emoji-mart.css';
+import $ from 'jquery';
 
 /***
  * blogs: A list of blog
