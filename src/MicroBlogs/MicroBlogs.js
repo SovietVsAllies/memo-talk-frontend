@@ -18,11 +18,21 @@ class MicroBlogs extends Component {
         this.state = {
             loaded: false,
             posts: [],
+            value: '',
         };
         this.updatePosts = this.updatePosts.bind(this);
+        this.onSearchClick = this.onSearchClick.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.setLoaded = this.setLoaded.bind(this);
+    }
+    
+    setLoaded(v) {
+        this.setState({loaded: v});
     }
 
     updatePosts() {
+        let searchText = this.state.value;
+        
         let accountContract = Application.getInstance().accountContract;
         let registry = Application.getInstance().registry;
         let accountAddress = localStorage.getItem('account');
@@ -43,19 +53,21 @@ class MicroBlogs extends Component {
                     account: acc,
                     accountName: registry.getAccountName(acc.address),
                     id: j,
-                    timestamp: new Date(post[0].toNumber() * 1000).toLocaleString(),
+                    timestamp: new Date(post[0].toNumber() * 1000),
                     content: post[1]
                 };
 
-                // Filter
-                // if (filter(post.content)) {
-                posts.push(post);
-                // }
+                if (post.content.includes(searchText)) {
+                    posts.push(post);
+                }
             }
         }
         posts.sort(function (lhs, rhs) {
             return rhs.timestamp - lhs.timestamp;
         });
+        for (let i = 0; i < posts.length; i++) {
+            posts[i].timestamp = posts[i].timestamp.toLocaleString();
+        }
         this.setState({
             loaded: true,
             posts: posts,
@@ -68,11 +80,14 @@ class MicroBlogs extends Component {
 
     render() {
         let blogsContent;
-        if (this.state.loaded === false) {
+        if (!this.state.loaded) {
             blogsContent = <Loading/>
         } else {
             blogsContent =
                 <Fragment>
+                    <header className='text-center' id='blogs-header'>
+                        Microblogs Square
+                    </header>
                     <div className='blog-block'>
                         <div>
                             <div className="sender-info"><span className="sender-name">David</span><span
@@ -95,18 +110,12 @@ class MicroBlogs extends Component {
                         </div>
                     </div>
                     {this.state.posts.map((blog) => {
-                        let content;
-                        try {
-                            content = JSON.parse(blog.content);
-                        } catch (e) {
-                            content = {text: blog.content};
-                        }
                         return <SingleBlog
                             key={blog.id + blog.account.address}
                             name={blog.accountName}
                             id={blog.id}
                             time={blog.timestamp}
-                            content={content}
+                            content={JSON.parse(blog.content)}
                         />;
                     })}
                 </Fragment>
@@ -115,17 +124,31 @@ class MicroBlogs extends Component {
         return (
             <CenterBlock>
                 <div id='search-bar'>
-                    <FormControl type="text" placeholder="Search"/>
-                    <i className="fas fa-search"/>
+                <form>
+                    <FormControl type="text" placeholder="Search" value={this.state.value} onChange={this.handleChange}/>
+                    <button type="submit" className="btn" style={{background: 'none',
+                            border: 'none',
+                            padding: 0, 
+                            outline: 'none'}}
+                            onClick={this.onSearchClick}>
+                        <i className="fas fa-search"/>
+                    </button>
+                </form>
                 </div>
-                <SendBlogBlock updatePosts={this.updatePosts}/>
+                <SendBlogBlock updatePosts={this.updatePosts} setLoaded={this.setLoaded}/>
                 <hr/>
-                <header className='text-center' id='blogs-header'>
-                    Microblogs Square
-                </header>
                 {blogsContent}
             </CenterBlock>
         );
+    }
+    
+    onSearchClick(e) {
+        e.preventDefault();
+        this.updatePosts();
+    }
+    
+    handleChange(event) {
+        this.setState({value: event.target.value});
     }
 }
 
@@ -175,6 +198,8 @@ class SendBlogBlock extends Component {
                 <input type="file" accept="image/png, image/jpeg" onChange={this.onImageInputChange}/>
             </Popover>
         );
+        this.onEmojiClick = this.onEmojiClick.bind(this);
+        this.onUploadClick = this.onUploadClick.bind(this);
     }
 
     onImageInputChange(e) {
@@ -195,6 +220,11 @@ class SendBlogBlock extends Component {
 
     async handleSubmit(e) {
         e.preventDefault();
+        this.props.setLoaded(false);
+        
+        this.refs.emojiOverlay.hide();
+        this.refs.uploadOverlay.hide();
+        
         let account = Application.getInstance().account;
 
         let content;
@@ -236,6 +266,14 @@ class SendBlogBlock extends Component {
     addHash(emoji) {
         this.setState({value: this.state.value + '#'});
     }
+    
+    onEmojiClick() {
+        this.refs.uploadOverlay.hide();
+    }
+    
+    onUploadClick() {
+        this.refs.emojiOverlay.hide();
+    }
 
     render() {
         let button;
@@ -254,13 +292,13 @@ class SendBlogBlock extends Component {
                     </FormGroup>
                     {button}
                     <div id='send-block-tools'>
-                        <OverlayTrigger trigger="click" placement="bottom" overlay={this.emojiPopover}>
+                        <OverlayTrigger trigger="click" placement="bottom" overlay={this.emojiPopover} ref="emojiOverlay" onClick={this.onEmojiClick}>
                             <span id="emoji-tool">
                                 <i className="far fa-smile"/>
                                 <span id="emoji-button"> Emoji</span>
                             </span>
                         </OverlayTrigger>
-                        <OverlayTrigger trigger="click" placement="bottom" overlay={this.uploadPhotoPopover}>
+                        <OverlayTrigger trigger="click" placement="bottom" overlay={this.uploadPhotoPopover} ref="uploadOverlay" onClick={this.onUploadClick}>
                             <span id="photo-tool">
                                 <i className="fas fa-camera-retro"/>
                                 <span id="photo-button"> Photo</span>

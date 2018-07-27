@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import './Chat.css';
 import CenterBlock from "../CenterBlock/CenterBlock";
 import {FormGroup, Button, HelpBlock, FormControl, ControlLabel} from 'react-bootstrap';
@@ -6,7 +6,6 @@ import {ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Launcher} from "react-chat-window";
 import Application from "../Application/Application";
 import $ from 'jquery';
-import { CSSTransitionGroup } from 'react-transition-group';
 
 class Chat extends Component {
     constructor(props) {
@@ -150,7 +149,18 @@ export class Messenger extends Component {
         let accountContract = Application.getInstance().accountContract;
         let registry = Application.getInstance().registry;
         let recipient = this.props.other;
-        let content = message.type === 'emoji' ? message.data.emoji : message.data.text;
+        let content;
+        switch (message.type) {
+            case 'text':
+                content = message.data.text;
+                break;
+            case 'emoji':
+                content = message.data.emoji;
+                break;
+            case 'image':
+                content = message.data.image;
+                break;
+        }
         let acc = accountContract.at(registry.getAccountAddress(recipient));
         let signalMessage = await $.ajax({
             url: 'http://localhost:' + Application.getInstance().SIGNAL_PORT + '/encrypt/',
@@ -160,7 +170,10 @@ export class Messenger extends Component {
                 registrationId: acc.getRegistrationId(),
                 identityKey: acc.getIdentityKey(),
                 signedPreKey: acc.getSignedPreKey(),
-                plaintext: content,
+                plaintext: JSON.stringify({
+                    content: content,
+                    type: message.type,
+                }),
             }),
             contentType: 'text/plain; charset=UTF-8',
             dataType: 'json',
@@ -174,15 +187,28 @@ export class Messenger extends Component {
             sender: account.address,
             recipient: registry.getAccountAddress(recipient),
             content: content,
+            type: message.type,
         });
     }
 
-    sendMessage(text) {
+    sendMessage(plaintextMessage) {
+        let data;
+        switch (plaintextMessage.type) {
+            case 'text':
+                data = {text: plaintextMessage.content};
+                break;
+            case 'emoji':
+                data = {emoji: plaintextMessage.content};
+                break;
+            case 'image':
+                data = {image: plaintextMessage.content};
+                break;
+        }
         this.setState({
             messageList: [...this.state.messageList, {
                 author: 'them',
-                type: 'text',
-                data: {text}
+                type: plaintextMessage.type,
+                data: data,
             }]
         })
     }
@@ -220,10 +246,22 @@ export class Messenger extends Component {
         let messageList = [];
         for (let i in messages) {
             let message = messages[i];
+            let data;
+            switch (message.type) {
+                case 'text':
+                    data = {text: message.content};
+                    break;
+                case 'emoji':
+                    data = {emoji: message.content};
+                    break;
+                case 'image':
+                    data = {image: message.content};
+                    break;
+            }
             messageList.push({
                 author: message.sender === account.address ? 'me' : 'them',
-                type: 'text',
-                data: {text: message.content},
+                type: message.type,
+                data: data,
             });
         }
         this.setState({
@@ -258,11 +296,13 @@ export class Messenger extends Component {
                         contentType: 'text/plain; charset=UTF-8',
                         dataType: 'json',
                     });
-                    this.sendMessage(plaintext.plaintext);
+                    let plaintextMessage = JSON.parse(plaintext.plaintext);
+                    this.sendMessage(plaintextMessage);
                     Messenger.saveMessage({
                         sender: message[0],
                         recipient: account.address,
                         content: plaintext.plaintext,
+                        type: plaintextMessage.type,
                     });
                 } catch (e) {
                     console.log(e);
@@ -276,27 +316,19 @@ export class Messenger extends Component {
     }
 
     render() {
-        if (this.props.other) {
-            return (
-            <Fragment>
-                <Launcher
-                    agentProfile={{
-                        teamName: this.props.other,
-                        imageUrl: '',
-                    }}
-                    onMessageWasSent={this.onMessageWasSent}
-                    messageList={this.state.messageList}
-                    showEmoji
-                />
-                <CSSTransitionGroup>
-                    transitionEnterTimeout={400}
-                    transitionLeaveTimeout={400}
-                </CSSTransitionGroup>
-            </Fragment>
-            );
-        } else {
-            return null;
-        }
+        return (
+        <div style={{opacity: this.props.other ? 1 : 0}} id="laucher-button">
+            <Launcher
+                agentProfile={{
+                    teamName: this.props.other,
+                    imageUrl: '',
+                }}
+                onMessageWasSent={this.onMessageWasSent}
+                messageList={this.state.messageList}
+                showEmoji
+            />
+        </div>
+        );
     }
 }
 
