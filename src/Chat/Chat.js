@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import './Chat.css';
 import CenterBlock from "../CenterBlock/CenterBlock";
 import {FormGroup, Button, HelpBlock, FormControl, ControlLabel} from 'react-bootstrap';
@@ -6,6 +6,7 @@ import {ListGroup, ListGroupItem} from 'react-bootstrap';
 import {Launcher} from "react-chat-window";
 import Application from "../Application/Application";
 import $ from 'jquery';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 class Chat extends Component {
     constructor(props) {
@@ -149,7 +150,7 @@ export class Messenger extends Component {
         let accountContract = Application.getInstance().accountContract;
         let registry = Application.getInstance().registry;
         let recipient = this.props.other;
-        let content = message.data.text;
+        let content = message.type === 'emoji' ? message.data.emoji : message.data.text;
         let acc = accountContract.at(registry.getAccountAddress(recipient));
         let signalMessage = await $.ajax({
             url: 'http://localhost:' + Application.getInstance().SIGNAL_PORT + '/encrypt/',
@@ -275,15 +276,27 @@ export class Messenger extends Component {
     }
 
     render() {
-        return (<Launcher
-            agentProfile={{
-                teamName: this.props.other,
-                imageUrl: '',
-            }}
-            onMessageWasSent={this.onMessageWasSent}
-            messageList={this.state.messageList}
-            showEmoji
-        />);
+        if (this.props.other) {
+            return (
+            <Fragment>
+                <Launcher
+                    agentProfile={{
+                        teamName: this.props.other,
+                        imageUrl: '',
+                    }}
+                    onMessageWasSent={this.onMessageWasSent}
+                    messageList={this.state.messageList}
+                    showEmoji
+                />
+                <ReactCSSTransitionGroup>
+                    transitionEnterTimeout={400}
+                    transitionLeaveTimeout={400}
+                </ReactCSSTransitionGroup>
+            </Fragment>
+            );
+        } else {
+            return null;
+        }
     }
 }
 
