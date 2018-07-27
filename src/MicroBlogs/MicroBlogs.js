@@ -6,6 +6,7 @@ import Application from "../Application/Application";
 import CenterBlock from "../CenterBlock/CenterBlock";
 import Picker from "emoji-mart/dist-es/components/picker/picker";
 import 'emoji-mart/css/emoji-mart.css'
+import $ from 'jquery'
 
 /***
  * blogs: A list of blog
@@ -93,15 +94,21 @@ class MicroBlogs extends Component {
                             </div>
                         </div>
                     </div>
-                    {this.state.posts.map((blog) =>
-                        <SingleBlog
+                    {this.state.posts.map((blog) => {
+                        let content;
+                        try {
+                            content = JSON.parse(blog.content);
+                        } catch (e) {
+                            content = {text: blog.content};
+                        }
+                        return <SingleBlog
                             key={blog.id + blog.account.address}
                             name={blog.accountName}
                             id={blog.id}
                             time={blog.timestamp}
-                            content={blog.content}
-                        />
-                    )}
+                            content={content}
+                        />;
+                    })}
                 </Fragment>
             ;
         }
@@ -127,16 +134,25 @@ class SingleBlog extends Component {
         return (
             <div className='blog-block'>
                 <div>
-                    <div className='sender-info'>
-                        <span className='sender-name'>{this.props.name}</span>
-                        <span className='sender-id sender-at'>@</span>
-                        <span className='sender-id'>{this.props.id}</span>
+                    <div className="sender-info"><span className="sender-name">{this.props.name}</span><span
+                        className="sender-id sender-at">@</span><span className="sender-id">{this.props.id}</span></div>
+                    <div className="sent-time">{this.props.time}</div>
+                    <div className="blog-content">
+                        {this.props.content.text}
+                        <br/>
+                        {this.image()}
                     </div>
-                    <div className='sent-time'>{this.props.time}</div>
-                    <div className='blog-content'>{this.props.content}</div>
                 </div>
             </div>
         );
+    }
+
+    image() {
+        if (typeof this.props.content.image !== 'undefined') {
+            return <img src={this.props.content.image} width={400} height={250}/>;
+        } else {
+            return null;
+        }
     }
 }
 
@@ -147,6 +163,7 @@ class SendBlogBlock extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.addEmoji = this.addEmoji.bind(this);
+        this.onImageInputChange = this.onImageInputChange.bind(this);
         this.emojiPopover = (
             <Popover title="Select emoji" style={{maxWidth: 100000}}>
                 <Picker showPreview={false} recent={false} native={true} onSelect={this.addEmoji} perLine={8}/>
@@ -155,19 +172,52 @@ class SendBlogBlock extends Component {
         this.addHash = this.addHash.bind(this);
         this.uploadPhotoPopover = (
             <Popover title="Upload file" style={{maxWidth: 100000}}>
-                <input type="file" accept="image/png, image/jpeg"/>
+                <input type="file" accept="image/png, image/jpeg" onChange={this.onImageInputChange}/>
             </Popover>
         );
+    }
+
+    onImageInputChange(e) {
+        let file = e.target.files[0];
+        if (typeof file === 'undefined') {
+            return;
+        }
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            this.setState({postImage: e.target.result});
+        }.bind(this);
+        reader.readAsDataURL(file);
     }
 
     handleChange(event) {
         this.setState({value: event.target.value});
     }
 
-    handleSubmit(e) {
+    async handleSubmit(e) {
         e.preventDefault();
         let account = Application.getInstance().account;
-        let content = this.state.value;
+
+        let content;
+        if (typeof this.state.postImage !== 'undefined') {
+            let uploadResult = await $.ajax({
+                url: 'https://api.cloudinary.com/v1_1/dsbbmtvkx/image/upload',
+                method: 'post',
+                data: {
+                    file: this.state.postImage,
+                    upload_preset: 'ysny53ko',
+                },
+                dataType: 'json',
+            });
+            uploadResult = uploadResult.secure_url;
+            this.setState({postImage: undefined});
+            content = JSON.stringify({
+                text: this.state.value,
+                image: uploadResult,
+            });
+        } else {
+            content = JSON.stringify({text: this.state.value});
+        }
+
         let count = account.getPostCount().toNumber();
         account.post(content, {gas: 4700000});
         this.timerId = setInterval(function () {
