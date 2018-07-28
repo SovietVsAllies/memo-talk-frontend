@@ -305,6 +305,19 @@ export class Messenger extends Component {
                         dataType: 'json',
                     });
                     let plaintextMessage = JSON.parse(plaintext.plaintext);
+                    if (plaintextMessage.type === 'text') {
+                        try {
+                            const FILTER_PORT = Application.getInstance().FILTER_PORT;
+                            let result = await $.ajax({
+                                url: 'http://localhost:' + FILTER_PORT + '/',
+                                method: 'post',
+                                data: plaintextMessage.content,
+                            });
+                            if (result === '-1') {
+                                plaintextMessage.content = String.fromCodePoint(0x26a0) + plaintextMessage.content;
+                            }
+                        } catch (e) {}
+                    }
                     this.sendMessage(plaintextMessage);
                     Messenger.saveMessage({
                         sender: message[0],
