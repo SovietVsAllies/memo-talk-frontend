@@ -10,6 +10,10 @@ margin: 0 auto;
 font-family: RobotoSlab, sans-serif;
 }
 
+#manage-form span {
+    z-index: 0;
+}
+
 #purse-table {
     margin-top: 4em;
     font-size: 1.6em;
